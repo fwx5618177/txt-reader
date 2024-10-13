@@ -15,7 +15,7 @@ on:
       - dev
 
 env:
-  name: "TXT-Reader"
+  name: TXT-Reader
   raw_name: txt_reader
 
 jobs:
@@ -84,8 +84,9 @@ jobs:
             --window-pos 200 120 \
             --window-size 800 400 \
             --icon-size 100 \
-            --icon "runner.app" 200 190 \
+            --icon "${{ env.raw_name }}.app" 200 190 \
             --app-drop-link 600 185 \
+            --skip-jenkins \
             "build/macos/dmg/${{ env.name }}.dmg" \
             "build/macos/Build/Products/Release/${{ env.raw_name }}.app"
 
@@ -128,12 +129,12 @@ jobs:
         run: |
             mkdir -p build/ios/ipa
             fastlane gym --scheme "Runner" \
-            --export_method "development" \
+            --export_method "ad-hoc" \
             --output_directory "./build/ios/ipa" \
             --output_name ${{ env.name }}.ipa \
+            --skip_codesigning \
             --xcargs "CODE_SIGNING_ALLOWED=NO" \
-            --workspace "ios/Runner.xcworkspace" \
-            --skip_codesigning
+            --workspace "ios/Runner.xcworkspace"
 
       # 上传 iOS 构建产物
       - name: Upload iOS Build Artifacts
