@@ -86,8 +86,8 @@ jobs:
             --icon-size 100 \
             --icon "runner.app" 200 190 \
             --app-drop-link 600 185 \
-            "build/macos/Build/Products/Release/${{ env.raw_name }}.app" \
-            "build/macos/dmg/"
+            "build/macos/dmg/${{ env.name }}.dmg" \
+            "build/macos/Build/Products/Release/${{ env.raw_name }}.app"
 
       # 上传 macOS 构建产物
       - name: Upload macOS Build Artifacts
@@ -132,7 +132,8 @@ jobs:
             --output_directory "./build/ios/ipa" \
             --output_name ${{ env.name }}.ipa \
             --xcargs "CODE_SIGNING_ALLOWED=NO" \
-            --workspace "ios/Runner.xcworkspace"
+            --workspace "ios/Runner.xcworkspace" \
+            --skip_codesigning
 
       # 上传 iOS 构建产物
       - name: Upload iOS Build Artifacts
