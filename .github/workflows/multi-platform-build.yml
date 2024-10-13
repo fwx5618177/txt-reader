@@ -44,7 +44,7 @@ jobs:
           name: windows-build
           path: build/windows/runner.exe
 
-  # macOS 构建任务：编译 macOS、iOS 和 Android 应用
+  # macOS 构建任务
   build-macos:
     runs-on: macos-latest
     steps:
@@ -64,20 +64,32 @@ jobs:
       - name: Build macOS
         run: flutter build macos
 
-      # 编译 iOS
-      - name: Build iOS
-        run: flutter build ios --no-codesign
-
-      # 编译 Android
-      - name: Build Android
-        run: flutter build apk
-
       # 上传 macOS 构建产物
       - name: Upload macOS Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
           path: build/macos/runner.app
+
+    # iOS 构建任务
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 编译 iOS
+      - name: Build iOS
+        run: flutter build ios --no-codesign
 
       # 上传 iOS 构建产物
       - name: Upload iOS Build Artifacts
@@ -86,13 +98,33 @@ jobs:
           name: ios-build
           path: build/ios/Runner.app
 
+    # Android 构建任务
+  build-android:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 编译 Android
+      - name: Build Android
+        run: flutter build apk
+
       # 上传 Android 构建产物
       - name: Upload Android Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: android-build
           path: build/app/outputs/flutter-apk/app-release.apk
-
+    
   # Linux 构建任务：只编译 Linux 应用
   build-linux:
     runs-on: ubuntu-latest
