@@ -4,20 +4,20 @@ on:
   push:
     branches:
       - main
+      - uat
+      - dev
+      - release
   pull_request:
     branches:
       - main
+      - uat
+      - dev
+      - release
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        platform: [macos, windows, linux, ios, android, web]  # 平行运行的平台矩阵
-        os: [macos-latest, windows-latest, ubuntu-latest]  # 定义在哪些操作系统运行
-      fail-fast: false  # 让所有平台的任务都尝试运行，不因为其中一个失败而停止
-
-    runs-on: ${{ matrix.os }}
-
+  # Windows 构建任务：只编译 Windows 应用
+  build-windows:
+    runs-on: windows-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -26,36 +26,87 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
-          flutter-version-file: pubspec.yaml
 
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build for ${{ matrix.platform }}
-        run: |
-          if [[ "${{ matrix.platform }}" == "macos" && "${{ matrix.os }}" == "macos-latest" ]]; then
-            flutter build macos
-          elif [[ "${{ matrix.platform }}" == "windows" && "${{ matrix.os }}" == "windows-latest" ]]; then
-            flutter build windows
-          elif [[ "${{ matrix.platform }}" == "linux" && "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-            flutter build linux
-          elif [[ "${{ matrix.platform }}" == "ios" && "${{ matrix.os }}" == "macos-latest" ]]; then
-            flutter build ios --no-codesign
-          elif [[ "${{ matrix.platform }}" == "android" && "${{ matrix.os }}" == "ubuntu-latest" ]]; then
-            flutter build apk
-          elif [[ "${{ matrix.platform }}" == "web" ]]; then
-            flutter build web
-          fi
+      - name: Build Windows
+        run: flutter build windows
 
-      - name: Upload Build Artifacts
-        if: success()
+      - name: Upload Windows Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.platform }}-build
-          path: |
-            build/macos/runner.app
-            build/windows/runner.exe
-            build/linux/runner
-            build/ios/Runner.app
-            build/app/outputs/flutter-apk/app-release.apk
-            build/web
+          name: windows-build
+          path: build/windows/runner.exe
+
+  # macOS 构建任务：编译 macOS、iOS 和 Android 应用
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 编译 macOS
+      - name: Build macOS
+        run: flutter build macos
+
+      # 编译 iOS
+      - name: Build iOS
+        run: flutter build ios --no-codesign
+
+      # 编译 Android
+      - name: Build Android
+        run: flutter build apk
+
+      # 上传 macOS 构建产物
+      - name: Upload macOS Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-build
+          path: build/macos/runner.app
+
+      # 上传 iOS 构建产物
+      - name: Upload iOS Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: build/ios/Runner.app
+
+      # 上传 Android 构建产物
+      - name: Upload Android Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+  # Linux 构建任务：只编译 Linux 应用
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Linux
+        run: flutter build linux
+
+      - name: Upload Linux Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: build/linux/runner
