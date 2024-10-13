@@ -79,14 +79,14 @@ jobs:
         run: |
           mkdir -p build/macos/dmg
           create-dmg \
-            --volname "${{ env.name }}.dmg" \
+            --volname "${{ env.name }}" \
             --window-pos 200 120 \
             --window-size 800 400 \
             --icon-size 100 \
             --icon "runner.app" 200 190 \
             --app-drop-link 600 185 \
             "build/macos/Build/Products/Release/txt_reader.app" \
-            "build/macos/dmg/"
+            "build/macos/dmg/${{ env.name }}.dmg"
 
       # 上传 macOS 构建产物
       - name: Upload macOS Build Artifacts
