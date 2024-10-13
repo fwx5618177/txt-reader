@@ -117,31 +117,12 @@ jobs:
       - name: Build iOS
         run: flutter build ios --no-codesign
 
-      # 安装 fastlane 并导出 ipa
-      - name: Install Fastlane
-        run: sudo gem install fastlane
-
-      # 使用 fastlane 导出 IPA 文件
-      - name: Create IPA File
-        env:
-            FASTLANE_SKIP_UPDATE_CHECK: "true"
-            FASTLANE_DISABLE_COLORS: "true"
-        run: |
-            mkdir -p build/ios/ipa
-            fastlane gym --scheme "Runner" \
-            --export_method "ad-hoc" \
-            --output_directory "./build/ios/ipa" \
-            --output_name ${{ env.name }}.ipa \
-            --skip_codesigning \
-            --xcargs "CODE_SIGNING_ALLOWED=NO" \
-            --workspace "ios/Runner.xcworkspace"
-
       # 上传 iOS 构建产物
       - name: Upload iOS Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ios-build
-          path: build/ios/ipa/*.ipa
+          path: build/ios/iphoneos/Runner.app
 
     # Android 构建任务
   build-android:
