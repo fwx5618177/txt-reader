@@ -1,0 +1,61 @@
+name: Multi-Platform Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        platform: [macos, windows, linux, ios, android, web]  # 平行运行的平台矩阵
+        # 为每个平台指定合适的运行环境
+        os: [macos-latest, windows-latest, ubuntu-latest]  
+      fail-fast: false  # 让所有平台的任务都尝试运行，不因为其中一个失败而停止
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.0.0'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build for ${{ matrix.platform }}
+        run: |
+          if [ "${{ matrix.platform }}" == "macos" ]; then
+            flutter build macos
+          elif [ "${{ matrix.platform }}" == "windows" ]; then
+            flutter build windows
+          elif [ "${{ matrix.platform }}" == "linux" ]; then
+            flutter build linux
+          elif [ "${{ matrix.platform }}" == "ios" ]; then
+            flutter build ios --no-codesign
+          elif [ "${{ matrix.platform }}" == "android" ]; then
+            flutter build apk
+          elif [ "${{ matrix.platform }}" == "web" ]; then
+            flutter build web
+          fi
+
+      - name: Upload Build Artifacts
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.platform }}-build
+          path: |
+            build/macos/runner.app
+            build/windows/runner.exe
+            build/linux/runner
+            build/ios/Runner.app
+            build/app/outputs/flutter-apk/app-release.apk
+            build/web

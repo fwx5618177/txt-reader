@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:txt_reader/config/color.dart';
 import 'package:txt_reader/config/routes.dart';
 import 'package:txt_reader/models/onboard.dart';
-import 'package:txt_reader/utils/TextUtils.dart';
+import 'package:txt_reader/utils/text_utils.dart';
 
 class OnBoardPage extends StatefulWidget {
   const OnBoardPage({super.key});
