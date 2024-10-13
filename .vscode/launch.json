@@ -1,0 +1,40 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Flutter on iOS",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "ios",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "Flutter on Android",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "android",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "Flutter on Web",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "chrome",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "Flutter on macOS",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "macos",
+        "flutterMode": "debug"
+      },
+      {
+        "name": "Flutter on Windows",
+        "request": "launch",
+        "type": "dart",
+        "deviceId": "windows",
+        "flutterMode": "debug"
+      }
+    ]
+  }
