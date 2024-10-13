@@ -100,7 +100,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-    
+      - name: Install yq using snap
+        run: sudo snap install yq
+
       - name: Install dependencies for Linux build
         run: sudo apt-get install -y cmake ninja-build gcc g++ libgtk-3-dev
 
