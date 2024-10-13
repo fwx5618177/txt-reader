@@ -110,7 +110,7 @@ class _OnBoardPageState extends State<OnBoardPage> {
     return Column(
       children: [
         Container(
-          height: size.height * 0.5,
+          height: size.height * 0.4,
           width: size.width * 0.9,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -123,7 +123,7 @@ class _OnBoardPageState extends State<OnBoardPage> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(50),
                   child: Container(
-                    height: 240,
+                    height: size.height * 0.25, // 动态高度
                     width: size.width * 0.9,
                     color: AppColors.orangeContainer,
                     child: Stack(
@@ -131,31 +131,33 @@ class _OnBoardPageState extends State<OnBoardPage> {
                         Positioned(
                           top: 5,
                           left: -40,
-                          height: 130,
-                          width: 130,
+                          height: size.height * 0.15, // 动态调整尺寸
+                          width: size.height * 0.15,
                           child: Transform.rotate(
                             angle: -11,
-                            child:
-                                SvgPicture.asset("assets/illustrations/paw.svg",
-                                    colorFilter: ColorFilter.mode(
-                                      AppColors.pawColor1,
-                                      BlendMode.srcIn,
-                                    )),
+                            child: SvgPicture.asset(
+                              "assets/illustrations/paw.svg",
+                              colorFilter: ColorFilter.mode(
+                                AppColors.pawColor1,
+                                BlendMode.srcIn,
+                              ),
+                            ),
                           ),
                         ),
                         Positioned(
                           bottom: -20,
                           right: -20,
-                          height: 130,
-                          width: 130,
+                          height: size.height * 0.15, // 动态调整尺寸
+                          width: size.height * 0.15,
                           child: Transform.rotate(
                             angle: -12,
-                            child:
-                                SvgPicture.asset("assets/illustrations/paw.svg",
-                                    colorFilter: ColorFilter.mode(
-                                      AppColors.pawColor1,
-                                      BlendMode.srcIn,
-                                    )),
+                            child: SvgPicture.asset(
+                              "assets/illustrations/paw.svg",
+                              colorFilter: ColorFilter.mode(
+                                AppColors.pawColor1,
+                                BlendMode.srcIn,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -168,10 +170,10 @@ class _OnBoardPageState extends State<OnBoardPage> {
                 right: 60,
                 child: Image.asset(
                   onBoardData[index].image,
-                  height: 375,
-                  fit: BoxFit.fill,
+                  height: size.height * 0.35, // 动态高度调整
+                  fit: BoxFit.contain, // 避免图片被裁剪
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -181,12 +183,12 @@ class _OnBoardPageState extends State<OnBoardPage> {
             children: TextUtils.parseText(
                 onBoardData[index].title,
                 TextStyle(
-                  fontSize: 35,
+                  fontSize: size.height * 0.045, // 动态字体大小
                   color: Colors.black,
                   fontWeight: FontWeight.w900,
                 ),
                 TextStyle(
-                  fontSize: 35,
+                  fontSize: size.height * 0.045, // 动态字体大小
                   color: Colors.lightBlue, // 强调部分的样式
                   fontWeight: FontWeight.w900,
                 )),
@@ -197,8 +199,8 @@ class _OnBoardPageState extends State<OnBoardPage> {
         Text(
           onBoardData[index].description,
           textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 15.5,
+          style: TextStyle(
+            fontSize: size.height * 0.02, // 动态字体大小
             color: Colors.black38,
           ),
         )
