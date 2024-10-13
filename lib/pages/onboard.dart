@@ -5,6 +5,9 @@ import 'package:txt_reader/config/color.dart';
 import 'package:txt_reader/config/routes.dart';
 import 'package:txt_reader/models/onboard.dart';
 import 'package:txt_reader/utils/text_utils.dart';
+import 'package:txt_reader/widgets/indicator_slider.dart';
+import 'package:txt_reader/widgets/onboard_action_button.dart';
+import 'package:txt_reader/widgets/onboarding_items.dart';
 
 class OnBoardPage extends StatefulWidget {
   const OnBoardPage({super.key});
@@ -38,12 +41,14 @@ class _OnBoardPageState extends State<OnBoardPage> {
               },
               controller: _pageController,
               itemBuilder: (BuildContext context, int index) {
-                return onBoardingItems(size, index);
+                return OnBoardingItems(size: size, index: index);
               },
             ),
           ),
-          GestureDetector(
-            onTap: () {
+          OnBoardActionButton(
+            currentIndex: _currentIndex,
+            totalIndex: onBoardData.length,
+            onNext: () {
               if (_currentIndex == onBoardData.length - 1) {
                 Get.toNamed(AppRoutes.home);
               } else {
@@ -53,158 +58,16 @@ class _OnBoardPageState extends State<OnBoardPage> {
                 );
               }
             },
-            child: Container(
-              height: 70,
-              width: size.width * 0.6,
-              decoration: BoxDecoration(
-                color: AppColors.buttonColor,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Center(
-                child: Text(
-                  _currentIndex == onBoardData.length - 1
-                      ? "Get Stared"
-                      : "Continue",
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ),
           ),
           const SizedBox(
             height: 20,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ...List.generate(
-                onBoardData.length,
-                (index) => indicatorForSlider(index: index),
-              ),
-            ],
-          )
+          IndicatorSlider(
+            currentIndex: _currentIndex,
+            totalCount: onBoardData.length,
+          ),
         ],
       ),
-    );
-  }
-
-  AnimatedContainer indicatorForSlider({int? index}) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 500),
-      width: _currentIndex == index ? 20 : 10,
-      height: 10,
-      margin: const EdgeInsets.only(right: 5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: _currentIndex == index
-            ? Colors.orange
-            : AppColors.black.withOpacity(0.2),
-      ),
-    );
-  }
-
-  Column onBoardingItems(Size size, int index) {
-    return Column(
-      children: [
-        Container(
-          height: size.height * 0.4,
-          width: size.width * 0.9,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                bottom: 0,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Container(
-                    height: size.height * 0.25, // 动态高度
-                    width: size.width * 0.9,
-                    color: AppColors.orangeContainer,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 5,
-                          left: -40,
-                          height: size.height * 0.15, // 动态调整尺寸
-                          width: size.height * 0.15,
-                          child: Transform.rotate(
-                            angle: -11,
-                            child: SvgPicture.asset(
-                              "assets/illustrations/paw.svg",
-                              colorFilter: ColorFilter.mode(
-                                AppColors.pawColor1,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: -20,
-                          right: -20,
-                          height: size.height * 0.15, // 动态调整尺寸
-                          width: size.height * 0.15,
-                          child: Transform.rotate(
-                            angle: -12,
-                            child: SvgPicture.asset(
-                              "assets/illustrations/paw.svg",
-                              colorFilter: ColorFilter.mode(
-                                AppColors.pawColor1,
-                                BlendMode.srcIn,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 60,
-                child: Image.asset(
-                  onBoardData[index].image,
-                  height: size.height * 0.35, // 动态高度调整
-                  fit: BoxFit.contain, // 避免图片被裁剪
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 30),
-        Text.rich(
-          TextSpan(
-            children: TextUtils.parseText(
-                onBoardData[index].title,
-                TextStyle(
-                  fontSize: size.height * 0.045, // 动态字体大小
-                  color: Colors.black,
-                  fontWeight: FontWeight.w900,
-                ),
-                TextStyle(
-                  fontSize: size.height * 0.045, // 动态字体大小
-                  color: Colors.lightBlue, // 强调部分的样式
-                  fontWeight: FontWeight.w900,
-                )),
-          ),
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 10),
-        Text(
-          onBoardData[index].description,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: size.height * 0.02, // 动态字体大小
-            color: Colors.black38,
-          ),
-        )
-      ],
     );
   }
 }
