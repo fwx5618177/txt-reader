@@ -20,7 +20,7 @@ class OnBoardActionButton extends StatelessWidget {
     return GestureDetector(
       onTap: onNext,
       child: Container(
-        height: 70,
+        height: size.height * 0.1,
         width: size.width * 0.6,
         decoration: BoxDecoration(
           color: AppColors.buttonColor,
