@@ -31,7 +31,6 @@ flutter:
   # 添加图片资源
   assets:
     - assets/illustrations/
-    - assets/novels/
 
   # 字体配置
   fonts:
