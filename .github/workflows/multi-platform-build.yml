@@ -117,12 +117,29 @@ jobs:
       - name: Build iOS
         run: flutter build ios --no-codesign
 
-      # 上传 iOS 构建产物
+      # 创建并打包为未签名的 IPA
+      - name: Archive and Export IPA
+        run: |
+            mkdir -p build/ios/ipa
+
+            xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner archive \
+            -configuration Release -sdk iphoneos \
+            -archivePath build/ios/archive/Runner.xcarchive \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+            xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist ExportOptions.plist \
+            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+            mv build/ios/ipa/Runner.ipa build/ios/ipa/${{ env.name }}.ipa
+
+        # 上传 iOS 构建产物
       - name: Upload iOS Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ios-build
-          path: build/ios/iphoneos/Runner.app
+            name: ios-build
+            path: build/ios/ipa/${{ env.name }}.ipa
 
     # Android 构建任务
   build-android:
