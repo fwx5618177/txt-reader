@@ -13,8 +13,7 @@ jobs:
     strategy:
       matrix:
         platform: [macos, windows, linux, ios, android, web]  # 平行运行的平台矩阵
-        # 为每个平台指定合适的运行环境
-        os: [macos-latest, windows-latest, ubuntu-latest]  
+        os: [macos-latest, windows-latest, ubuntu-latest]  # 定义在哪些操作系统运行
       fail-fast: false  # 让所有平台的任务都尝试运行，不因为其中一个失败而停止
 
     runs-on: ${{ matrix.os }}
@@ -33,23 +32,23 @@ jobs:
 
       - name: Build for ${{ matrix.platform }}
         run: |
-          if [ "${{ matrix.platform }}" == "macos" ]; then
+          if [[ "${{ matrix.platform }}" == "macos" && "${{ matrix.os }}" == "macos-latest" ]]; then
             flutter build macos
-          elif [ "${{ matrix.platform }}" == "windows" ]; then
+          elif [[ "${{ matrix.platform }}" == "windows" && "${{ matrix.os }}" == "windows-latest" ]]; then
             flutter build windows
-          elif [ "${{ matrix.platform }}" == "linux" ]; then
+          elif [[ "${{ matrix.platform }}" == "linux" && "${{ matrix.os }}" == "ubuntu-latest" ]]; then
             flutter build linux
-          elif [ "${{ matrix.platform }}" == "ios" ]; then
+          elif [[ "${{ matrix.platform }}" == "ios" && "${{ matrix.os }}" == "macos-latest" ]]; then
             flutter build ios --no-codesign
-          elif [ "${{ matrix.platform }}" == "android" ]; then
+          elif [[ "${{ matrix.platform }}" == "android" && "${{ matrix.os }}" == "ubuntu-latest" ]]; then
             flutter build apk
-          elif [ "${{ matrix.platform }}" == "web" ]; then
+          elif [[ "${{ matrix.platform }}" == "web" ]]; then
             flutter build web
           fi
 
       - name: Upload Build Artifacts
         if: success()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.platform }}-build
           path: |

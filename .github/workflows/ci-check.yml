@@ -7,6 +7,12 @@ on:
       - uat
       - dev
       - release
+  pull_request:
+    branches:
+      - main
+      - uat
+      - dev
+      - release
 
 jobs:
   lint-and-test:
