@@ -1,0 +1,102 @@
+name: Release to GitHub
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  name: "TXT-Reader"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref_name }} # 这里自动获取触发的 tag
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            ## Release Notes
+            - Automatically created release for ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub 自动提供的令牌，授权发布
+
+      # 下载之前构建的 artifacts
+      - name: Download Windows Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-build
+          path: ./artifacts/windows/
+
+      - name: Download macOS Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: macos-build
+          path: ./artifacts/macos/
+
+      - name: Download iOS Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-build
+          path: ./artifacts/ios/
+
+      - name: Download Android Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: android-build
+          path: ./artifacts/android/
+
+      - name: Download Linux Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-build
+          path: ./artifacts/linux/
+
+      # 上传构建产物到 Release
+      - name: Upload Assets to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/windows/${{ env.NAME }}.exe
+          asset_name: ${{ env.NAME }}_windows_${{ github.ref_name }}.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload macOS DMG to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/macos/${{ env.NAME }}.dmg
+          asset_name: ${{ env.NAME }}_macos_${{ github.ref_name }}.dmg
+          asset_content_type: application/x-apple-diskimage
+
+      - name: Upload iOS IPA to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/ios/${{ env.NAME }}.ipa
+          asset_name: ${{ env.NAME }}_ios_${{ github.ref_name }}.ipa
+          asset_content_type: application/octet-stream
+
+      - name: Upload Android APK to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/android/${{ env.NAME }}.apk
+          asset_name: ${{ env.NAME }}_android_${{ github.ref_name }}.apk
+          asset_content_type: application/vnd.android.package-archive
+
+      - name: Upload Linux Build to Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./artifacts/linux/${{ env.NAME }}
+          asset_name: ${{ env.NAME }}_linux_${{ github.ref_name }}
+          asset_content_type: application/octet-stream
