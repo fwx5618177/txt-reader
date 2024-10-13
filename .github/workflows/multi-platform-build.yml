@@ -129,7 +129,6 @@ jobs:
 
       - name: Export IPA
         run: |
-            ulimit -m 819200
             xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive \
             -exportPath build/ios/ipa \
             -exportOptionsPlist ExportOptions.plist \
