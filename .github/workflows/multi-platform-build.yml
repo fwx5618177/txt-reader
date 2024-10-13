@@ -102,11 +102,11 @@ jobs:
   build-android:
     runs-on: macos-latest
     steps:
-      - name: Set up Java 21
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: 'adopt'
-          java-version: '21'
+          java-version: '17'
 
       - name: Checkout code
         uses: actions/checkout@v4
