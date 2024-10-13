@@ -123,7 +123,7 @@ jobs:
       - name: Create IPA File
         run: |
             mkdir -p build/ios/ipa
-            fastlane gym --scheme "Runner" --export_method "development" --output_directory "./build/ios/ipa" --output_name ${{ env.name }}.ipa --no-codesign
+            fastlane gym --scheme "Runner" --export_method "development" --output_directory "./build/ios/ipa" --output_name ${{ env.name }}.ipa --xcargs "CODE_SIGNING_ALLOWED=NO"
 
       # 上传 iOS 构建产物
       - name: Upload iOS Build Artifacts
@@ -167,7 +167,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: android-build
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/${{ env.name }}.apk
     
   # Linux 构建任务：只编译 Linux 应用
   build-linux:
