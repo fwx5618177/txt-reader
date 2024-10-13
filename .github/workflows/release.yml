@@ -4,6 +4,10 @@ on:
   push:
     tags:
       - 'v*'
+  workflow_run:
+    workflows: ["Multi-Platform Build"]
+    types:
+      - completed
 
 env:
   name: "TXT-Reader"
@@ -65,38 +69,38 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/windows/${{ env.NAME }}.exe
-          asset_name: ${{ env.NAME }}_windows_${{ github.ref_name }}.exe
+          asset_path: ./artifacts/windows/${{ env.name }}.exe
+          asset_name: ${{ env.name }}_windows_${{ github.ref_name }}.exe
           asset_content_type: application/octet-stream
 
       - name: Upload macOS DMG to Release
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/macos/${{ env.NAME }}.dmg
-          asset_name: ${{ env.NAME }}_macos_${{ github.ref_name }}.dmg
+          asset_path: ./artifacts/macos/${{ env.name }}.dmg
+          asset_name: ${{ env.name }}_macos_${{ github.ref_name }}.dmg
           asset_content_type: application/x-apple-diskimage
 
       - name: Upload iOS IPA to Release
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/ios/${{ env.NAME }}.ipa
-          asset_name: ${{ env.NAME }}_ios_${{ github.ref_name }}.ipa
+          asset_path: ./artifacts/ios/${{ env.name }}.ipa
+          asset_name: ${{ env.name }}_ios_${{ github.ref_name }}.ipa
           asset_content_type: application/octet-stream
 
       - name: Upload Android APK to Release
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/android/${{ env.NAME }}.apk
-          asset_name: ${{ env.NAME }}_android_${{ github.ref_name }}.apk
+          asset_path: ./artifacts/android/${{ env.name }}.apk
+          asset_name: ${{ env.name }}_android_${{ github.ref_name }}.apk
           asset_content_type: application/vnd.android.package-archive
 
       - name: Upload Linux Build to Release
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./artifacts/linux/${{ env.NAME }}
-          asset_name: ${{ env.NAME }}_linux_${{ github.ref_name }}
+          asset_path: ./artifacts/linux/${{ env.name }}
+          asset_name: ${{ env.name }}_linux_${{ github.ref_name }}
           asset_content_type: application/octet-stream

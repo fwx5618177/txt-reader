@@ -6,13 +6,14 @@ on:
       - main
       - uat
       - dev
-      - release
+    tags:
+      - 'v*'
   pull_request:
     branches:
       - main
       - uat
       - dev
-      - release
+
 env:
   name: "TXT-Reader"
 
@@ -43,13 +44,13 @@ jobs:
           # 重命名生成的 exe 文件
       - name: Rename executable
         run: |
-            move build\windows\x64\runner\Release\txt_reader.exe build\windows\x64\runner\Release\${{ env.NAME }}.exe
+            move build\windows\x64\runner\Release\txt_reader.exe build\windows\x64\runner\Release\${{ env.name }}.exe
 
       - name: Upload Windows Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: build\windows\x64\runner\Release\${{ env.NAME }}.exe
+          path: build\windows\x64\runner\Release\${{ env.name }}.exe
 
   # macOS 构建任务
   build-macos:
@@ -78,7 +79,7 @@ jobs:
         run: |
           mkdir -p build/macos/dmg
           create-dmg \
-            --volname "${{ env.NAME }}.dmg" \
+            --volname "${{ env.name }}.dmg" \
             --window-pos 200 120 \
             --window-size 800 400 \
             --icon-size 100 \
@@ -92,7 +93,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: macos-build
-          path: build/macos/dmg/${{ env.NAME }}.dmg
+          path: build/macos/dmg/${{ env.name }}.dmg
 
     # iOS 构建任务
   build-ios:
@@ -122,7 +123,7 @@ jobs:
       - name: Create IPA File
         run: |
             mkdir -p build/ios/ipa
-            fastlane gym --scheme "Runner" --export_method "development" --output_directory "./build/ios/ipa" --output_name ${{ env.NAME }}.ipa --no-codesign
+            fastlane gym --scheme "Runner" --export_method "development" --output_directory "./build/ios/ipa" --output_name ${{ env.name }}.ipa --no-codesign
 
       # 上传 iOS 构建产物
       - name: Upload iOS Build Artifacts
@@ -159,7 +160,7 @@ jobs:
 
       - name: Rename APK
         run: |
-          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{ env.NAME }}.apk
+          mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{ env.name }}.apk
 
       # 上传 Android 构建产物
       - name: Upload Android Build Artifacts
@@ -195,7 +196,7 @@ jobs:
 
       - name: Rename executable
         run: |
-          mv build/linux/x64/release/bundle/txt_reader build/linux/x64/release/bundle/${{ env.NAME }}
+          mv build/linux/x64/release/bundle/txt_reader build/linux/x64/release/bundle/${{ env.name }}
 
       - name: Upload Linux Build Artifacts
         uses: actions/upload-artifact@v4
