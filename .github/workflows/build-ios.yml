@@ -1,18 +1,19 @@
 name: Build IOS
 
 on:
-  push:
-    branches:
-      - main
-      - uat
-      - dev
-      - release
-  pull_request:
-    branches:
-      - main
-      - uat
-      - dev
-      - release
+  workflow_dispatch:
+#   push:
+#     branches:
+#       - main
+#       - uat
+#       - dev
+#       - release
+#   pull_request:
+#     branches:
+#       - main
+#       - uat
+#       - dev
+#       - release
 
 env:
   name: TXT-Reader
