@@ -65,7 +65,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
             name: dependencies-cache
-            path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
+            path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}/**/*
+            include-hidden-files: true
 
   # Windows 构建任务：只编译 Windows 应用
   build-windows:
