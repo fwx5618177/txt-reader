@@ -19,6 +19,39 @@ env:
   raw_name: txt_reader
 
 jobs:
+  # 通用的依赖安装和缓存步骤
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v4
+        with:
+            path: |
+                ~/.pub-cache
+                flutter/bin/cache
+            key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
+            restore-keys: |
+                ${{ runner.os }}-flutter-
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+            channel: stable
+            flutter-version-file: pubspec.yaml
+
+      - name: Install dependencies (pub get)
+        run: flutter pub get
+
+      # 保存缓存供后续平台构建使用
+      - name: Upload dependencies cache
+        uses: actions/upload-artifact@v4
+        with:
+            name: dependencies-cache
+            path: ~/.pub-cache
+
   # Windows 构建任务：只编译 Windows 应用
   build-windows:
     runs-on: windows-latest
@@ -30,14 +63,19 @@ jobs:
       - name: Install yq
         run: choco install yq
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      # 下载依赖项缓存
+      - name: Download dependencies cache
+        uses: actions/download-artifact@v4
         with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
+          name: dependencies-cache
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Cache build artifacts
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: windows-build-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            windows-build-
 
       - name: Build Windows
         run: flutter build windows
@@ -60,14 +98,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      # 下载依赖项缓存
+      - name: Download dependencies cache
+        uses: actions/download-artifact@v4
         with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
+          name: dependencies-cache
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Cache build artifacts
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: macos-build-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            macos-build-
 
       # 编译 macOS
       - name: Build macOS
@@ -101,29 +144,29 @@ jobs:
   build-ios:
     runs-on: macos-latest
     steps:
-      - name: Setup Xcode
-        run: sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer
-
-      - name: Clean Build Cache
-        run: |
-          sudo rm -rf ~/Library/Developer/Xcode/DerivedData/*
-          xcodebuild clean -project Runner.xcodeproj -scheme Runner -configuration Release
+      - name: Monitor Resource Usage
+        run: vm_stat
         
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      # 下载依赖项缓存
+      - name: Download dependencies cache
+        uses: actions/download-artifact@v4
         with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
+          name: dependencies-cache
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Cache build artifacts
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: ios-build-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            ios-build-
 
       # 编译 iOS
       - name: Build iOS
-        run: flutter build ios --no-codesign
+        run: flutter build ios --release --no-codesign
 
       # 创建并打包为未签名的 IPA
       - name: Archive IPA
@@ -166,14 +209,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      # 下载依赖项缓存
+      - name: Download dependencies cache
+        uses: actions/download-artifact@v4
         with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
+          name: dependencies-cache
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Cache build artifacts
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: android-build-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            android-build-
 
       # 编译 Android
       - name: Build Android
@@ -203,14 +251,19 @@ jobs:
       - name: Install dependencies for Linux build
         run: sudo apt-get install -y cmake ninja-build gcc g++ libgtk-3-dev
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      # 下载依赖项缓存
+      - name: Download dependencies cache
+        uses: actions/download-artifact@v4
         with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
+          name: dependencies-cache
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Cache build artifacts
+        uses: actions/cache@v4
+        with:
+          path: build/
+          key: linux-build-${{ hashFiles('pubspec.yaml') }}
+          restore-keys: |
+            linux-build-
 
       - name: Build Linux
         run: flutter build linux
