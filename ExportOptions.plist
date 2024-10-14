@@ -10,7 +10,7 @@
     <string>ABCDE12345</string>
     <key>compileBitcode</key>
     <false/>
-    <key>destination</key>
-    <string>export</string>
+    <key>thinning</key>
+    <string>&lt;none&gt;</string>
   </dict>
 </plist>
