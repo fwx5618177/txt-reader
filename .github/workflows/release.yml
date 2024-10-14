@@ -30,6 +30,8 @@ jobs:
         with:
           name: windows-build
           path: ./artifacts/windows
+          run-id: ${{ github.event.workflow_run.id }}
+          repository: ${{ github.repository }}
 
       # 下载 macOS 构建产物
       - name: Download macOS Artifacts
@@ -37,6 +39,8 @@ jobs:
         with:
           name: macos-build
           path: ./artifacts/macos
+          run-id: ${{ github.event.workflow_run.id }}
+          repository: ${{ github.repository }}
 
       # 下载 Android 构建产物
       - name: Download Android Artifacts
@@ -44,6 +48,8 @@ jobs:
         with:
           name: android-build
           path: ./artifacts/android
+          run-id: ${{ github.event.workflow_run.id }}
+          repository: ${{ github.repository }}
 
       # 下载 Linux 构建产物
       - name: Download Linux Artifacts
@@ -51,11 +57,12 @@ jobs:
         with:
           name: linux-build
           path: ./artifacts/linux
+          run-id: ${{ github.event.workflow_run.id }}
+          repository: ${{ github.repository }}
 
       - name: List artifacts
         run: |
           ls -R ./artifacts
-          ls -R ./build
 
       - name: Generate Release Notes
         run: |
