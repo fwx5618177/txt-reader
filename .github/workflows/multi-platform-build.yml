@@ -101,6 +101,14 @@ jobs:
   build-ios:
     runs-on: macos-latest
     steps:
+      - name: Setup Xcode
+        run: sudo xcode-select -s /Applications/Xcode_12.5.1.app/Contents/Developer
+
+      - name: Clean Build Cache
+        run: |
+          sudo rm -rf ~/Library/Developer/Xcode/DerivedData/*
+          xcodebuild clean -project Runner.xcodeproj -scheme Runner -configuration Release
+        
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -118,7 +126,7 @@ jobs:
         run: flutter build ios --no-codesign
 
       # 创建并打包为未签名的 IPA
-      - name: Archive and Export IPA
+      - name: Archive IPA
         run: |
             mkdir -p build/ios/ipa
 
