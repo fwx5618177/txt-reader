@@ -26,9 +26,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 安装 yq
-      - name: Install yq
-        run: choco install yq --source="https://github.com/mikefarah/yq/releases/download/v4.40.2/yq_windows_amd64.exe"
+      # 安装 curl
+      - name: Install curl
+        run: choco install curl -y
+
+      # 使用 curl 下载 yq
+      - name: Download yq using curl
+        run: curl -Lo yq.exe https://github.com/mikefarah/yq/releases/download/v4.40.2/yq_windows_amd64.exe
+
+      # 将 yq 添加到路径中
+      - name: Add yq to PATH
+        run: |
+          move yq.exe C:\Windows\System32
+          echo "::add-path::C:\Windows\System32"
+
+      # 验证 yq 安装
+      - name: Verify yq installation
+        run: yq --version
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
