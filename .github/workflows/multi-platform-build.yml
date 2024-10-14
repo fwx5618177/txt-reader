@@ -45,12 +45,15 @@ jobs:
       - name: Install dependencies (pub get)
         run: flutter pub get
 
+      - name: Debug pub-cache path
+        run: ls -la ${{ runner.home }}/.pub-cache
+
       # 保存缓存供后续平台构建使用
       - name: Upload dependencies cache
         uses: actions/upload-artifact@v4
         with:
             name: dependencies-cache
-            path: ~/.pub-cache
+            path: ${{ runner.home }}/.pub-cache
 
   # Windows 构建任务：只编译 Windows 应用
   build-windows:
