@@ -46,3 +46,6 @@ jobs:
             application/vnd.android.package-archive
             application/octet-stream
           updateOnlyUnreleased: true
+          replacesArtifacts: true
+          skipIfReleaseExists: false
+          makeLatest: true
