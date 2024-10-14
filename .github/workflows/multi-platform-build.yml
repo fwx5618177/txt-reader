@@ -30,6 +30,10 @@ jobs:
       - name: Install yq
         run: choco install yq
 
+      # 安装 Inno Setup
+      - name: Install Inno Setup
+        run: choco install innosetup
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -44,14 +48,30 @@ jobs:
 
       # 重命名生成的 exe 文件
       - name: Rename executable
+        run: move build\windows\x64\runner\Release\txt_reader.exe build\windows\x64\runner\Release\${{ env.name }}.exe
+
+      - name: Generate Inno Setup Script
         run: |
-            move build\windows\x64\runner\Release\txt_reader.exe build\windows\x64\runner\Release\${{ env.name }}.exe
+          echo [Setup] > windows-installer.iss
+          echo AppName=${{ env.name }} >> windows-installer.iss
+          echo AppVersion=1.0 >> windows-installer.iss
+          echo DefaultDirName={pf}\\${{ env.name }} >> windows-installer.iss
+          echo DefaultGroupName=${{ env.name }} >> windows-installer.iss
+          echo OutputDir=build/windows/installer >> windows-installer.iss
+          echo OutputBaseFilename=${{ env.name }}_installer >> windows-installer.iss
+          echo [Files] >> windows-installer.iss
+          echo Source: "build\\windows\\x64\\runner\\Release\\*"; DestDir: "{app}"; Flags: ignoreversion >> windows-installer.iss
+          echo [Icons] >> windows-installer.iss
+          echo Name: "{group}\\${{ env.name }}"; Filename: "{app}\\${{ env.name }}.exe" >> windows-installer.iss
+
+      - name: Run Inno Setup Compiler
+        run: iscc windows-installer.iss
 
       - name: Upload Windows Build Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: windows-build
-          path: build\windows\x64\runner\Release\${{ env.name }}.exe
+          path: build/windows/installer/${{ env.name }}_installer.exe
           retention-days: 3
 
   # macOS 构建任务

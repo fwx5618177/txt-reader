@@ -88,6 +88,6 @@ jobs:
           allowUpdates: true
           replacesArtifacts: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: "./artifacts/windows/${{ env.name }}.exe,./artifacts/macos/${{ env.name }}.dmg,./artifacts/android/${{ env.name }}.apk,./artifacts/linux/${{ env.name }}"
+          artifacts: "./artifacts/windows/${{ env.name }}_installer.exe,./artifacts/macos/${{ env.name }}.dmg,./artifacts/android/${{ env.name }}.apk,./artifacts/linux/${{ env.name }}"
           skipIfReleaseExists: false
           makeLatest: true
