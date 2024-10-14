@@ -27,23 +27,8 @@ jobs:
         uses: actions/checkout@v4
 
       # 安装 yq
-    #   - name: Install yq
-    #     run: choco install yq
-
-      # 使用 PowerShell 下载 yq
-      - name: Download yq using PowerShell
-        run: Invoke-WebRequest -Uri "https://github.com/mikefarah/yq/releases/download/v4.40.2/yq_windows_amd64.exe" -OutFile "yq.exe"
-
-      # 将 yq 添加到路径中
-      - name: Move yq.exe to custom directory
-        run: |
-          mkdir -p C:\tools
-          move yq.exe C:\tools\yq.exe
-          echo "C:\tools" >> $env:GITHUB_PATH
-
-      # 验证 yq 安装
-      - name: Verify yq installation
-        run: yq --version
+      - name: Install yq
+        run: choco install yq
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
