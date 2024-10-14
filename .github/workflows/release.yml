@@ -24,6 +24,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Download Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+          path: ./artifacts
+
+      - name: List artifacts
+        run: |
+          ls -R ./artifacts
+          ls -R ./build
+
       - name: Generate Release Notes
         run: |
             echo "## Release Notes" > CHANGE.md
@@ -43,15 +54,13 @@ jobs:
           replacesArtifacts: false
           token: ${{ secrets.GITHUB_TOKEN }}
           artifacts: |
-            ./artifacts/windows/${{ env.name }}.exe
-            ./artifacts/macos/${{ env.name }}.dmg
-            ./artifacts/ios/${{ env.name }}.ipa
-            ./artifacts/android/${{ env.name }}.apk
-            ./artifacts/linux/${{ env.name }}
+            ./artifacts/${{ env.name }}.exe
+            ./artifacts/${{ env.name }}.dmg
+            ./artifacts/${{ env.name }}.apk
+            ./artifacts/${{ env.name }}
           artifactContentType: |
             application/octet-stream
             application/x-apple-diskimage
-            application/octet-stream
             application/vnd.android.package-archive
             application/octet-stream
           skipIfReleaseExists: false
