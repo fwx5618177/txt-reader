@@ -58,12 +58,17 @@ jobs:
       - name: Install dependencies (pub get)
         run: flutter pub get
 
+      - name: Print Cache
+        run: |
+            ls -la ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
+            ls -la ${{ steps.flutter-action.outputs.CACHE-PATH }}
+
       # 保存缓存供后续平台构建使用
       - name: Upload dependencies cache
         uses: actions/upload-artifact@v4
         with:
             name: dependencies-cache
-            path: /home/runner/.pub-cache
+            path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
 
   # Windows 构建任务：只编译 Windows 应用
   build-windows:
