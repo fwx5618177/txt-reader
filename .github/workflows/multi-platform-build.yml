@@ -100,55 +100,57 @@ jobs:
           retention-days: 3
 
     # iOS 构建任务
-  build-ios:
-    runs-on: macos-latest
-    steps:
-      - name: Monitor Resource Usage
-        run: vm_stat
+#   build-ios:
+#     runs-on: macos-latest
+#     steps:
+#       - name: Monitor Resource Usage
+#         run: vm_stat
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+#       - name: Checkout code
+#         uses: actions/checkout@v4
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          flutter-version-file: pubspec.yaml
+#       - name: Set up Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           channel: stable
+#           flutter-version-file: pubspec.yaml
 
-      - name: Install dependencies
-        run: flutter pub get
+#       - name: Install dependencies
+#         run: flutter pub get
 
-      # 编译 iOS
-      - name: Build iOS
-        run: flutter build ios --no-codesign
+#       # 编译 iOS
+#       - name: Build iOS
+#         run: flutter build ios --no-codesign
 
-      # 创建并打包为未签名的 IPA
-      - name: Archive and Export IPA
-        run: |
-            mkdir -p build/ios/ipa
+#       # 创建并打包为未签名的 IPA
+#       - name: Archive and Export IPA
+#         run: |
+#             mkdir -p build/ios/ipa
 
-            xcodebuild -quiet archive -workspace ios/Runner.xcworkspace -scheme Runner archive \
-            -configuration Release -sdk iphoneos \
-            -archivePath build/ios/archive/Runner.xcarchive \
-            CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -jobs 1
+#             xcodebuild -quiet archive -workspace ios/Runner.xcworkspace -scheme Runner archive \
+#             -configuration Release -sdk iphoneos \
+#             -archivePath build/ios/archive/Runner.xcarchive \
+#             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -jobs 1
 
-      - name: Export IPA
-        run: |
-            xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive \
-            -exportPath build/ios/ipa \
-            -exportOptionsPlist ExportOptions.plist
+#       - name: Export IPA
+#         run: |
+#             xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive \
+#             -exportPath build/ios/ipa \
+#             -exportOptionsPlist ExportOptions.plist \
+#             -allowProvisioningUpdates \
+#             CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -jobs 1 -verbose
 
-      - name: Rename IPA
-        run: |
-            mv build/ios/ipa/Runner.ipa build/ios/ipa/${{ env.name }}.ipa
+#       - name: Rename IPA
+#         run: |
+#             mv build/ios/ipa/Runner.ipa build/ios/ipa/${{ env.name }}.ipa
 
-        # 上传 iOS 构建产物
-      - name: Upload iOS Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-            name: ios-build
-            path: build/ios/ipa/${{ env.name }}.ipa
-            retention-days: 3
+#         # 上传 iOS 构建产物
+#       - name: Upload iOS Build Artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#             name: ios-build
+#             path: build/ios/ipa/${{ env.name }}.ipa
+#             retention-days: 3
 
     # Android 构建任务
   build-android:
