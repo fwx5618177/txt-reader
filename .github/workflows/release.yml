@@ -34,6 +34,10 @@ jobs:
           repository: ${{ github.repository }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # 解压 Windows 构建产物
+      - name: Unzip Windows Build
+        run: unzip -o ./artifacts/windows/windows-build.zip -d ./artifacts/windows/
+
       # 下载 macOS 构建产物
       - name: Download macOS Artifacts
         uses: actions/download-artifact@v4
@@ -43,6 +47,10 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           repository: ${{ github.repository }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # 解压 macOS 构建产物
+      - name: Unzip macOS Build
+        run: unzip -o ./artifacts/macos/macos-build.zip -d ./artifacts/macos/
 
       # 下载 Android 构建产物
       - name: Download Android Artifacts
@@ -54,6 +62,10 @@ jobs:
           repository: ${{ github.repository }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # 解压 Android 构建产物
+      - name: Unzip Android Build
+        run: unzip -o ./artifacts/android/android-build.zip -d ./artifacts/android/
+
       # 下载 Linux 构建产物
       - name: Download Linux Artifacts
         uses: actions/download-artifact@v4
@@ -64,10 +76,16 @@ jobs:
           repository: ${{ github.repository }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # 解压 Linux 构建产物
+      - name: Unzip Linux Build
+        run: unzip -o ./artifacts/linux/linux-build.zip -d ./artifacts/linux/
+
+      # 列出解压后的文件
       - name: List artifacts
         run: |
           ls -R ./artifacts
 
+      # 生成 Release Notes
       - name: Generate Release Notes
         run: |
             echo "## Release Notes" > CHANGE.md
@@ -77,6 +95,7 @@ jobs:
             echo "" >> CHANGE.md
             echo "Generated on $(date)" >> CHANGE.md
 
+      # 创建并上传 Release
       - name: Create and Upload Release
         uses: ncipollo/release-action@v1
         with:

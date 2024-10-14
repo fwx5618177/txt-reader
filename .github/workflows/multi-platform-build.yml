@@ -53,7 +53,6 @@ jobs:
           name: windows-build
           path: build\windows\x64\runner\Release\${{ env.name }}.exe
           retention-days: 3
-          compression-level: 0
 
   # macOS 构建任务
   build-macos:
@@ -99,7 +98,6 @@ jobs:
           name: macos-build
           path: build/macos/dmg/${{ env.name }}.dmg
           retention-days: 3
-          compression-level: 0
 
     # iOS 构建任务
 #   build-ios:
@@ -153,7 +151,6 @@ jobs:
 #             name: ios-build
 #             path: build/ios/ipa/${{ env.name }}.ipa
 #             retention-days: 3
-#             compression-level: 0
 
     # Android 构建任务
   build-android:
@@ -192,7 +189,6 @@ jobs:
           name: android-build
           path: build/app/outputs/flutter-apk/${{ env.name }}.apk
           retention-days: 3
-          compression-level: 0
     
   # Linux 构建任务：只编译 Linux 应用
   build-linux:
@@ -229,4 +225,3 @@ jobs:
           name: linux-build
           path: build/linux/x64/release/bundle/${{ env.name }}
           retention-days: 3
-          compression-level: 0
