@@ -48,9 +48,7 @@ jobs:
       - name: Cache Flutter dependencies
         uses: actions/cache@v4
         with:
-            path: |
-                ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
-                ${{ steps.flutter-action.outputs.CACHE-PATH }}
+            path: ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
             key: ${{ runner.os }}-flutter-${{ hashFiles('pubspec.yaml') }}
             restore-keys: |
                 ${{ runner.os }}-flutter-
@@ -61,7 +59,6 @@ jobs:
       - name: Print Cache
         run: |
             ls -la ${{ steps.flutter-action.outputs.PUB-CACHE-PATH }}
-            ls -la ${{ steps.flutter-action.outputs.CACHE-PATH }}
 
       # 保存缓存供后续平台构建使用
       - name: Upload dependencies cache
