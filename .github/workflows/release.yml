@@ -16,9 +16,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-        contents: write
-        packages: write
-        actions: write
+      contents: write
+      packages: write
+      actions: write
 
     steps:
       - name: Checkout code
@@ -45,3 +45,4 @@ jobs:
             application/octet-stream
             application/vnd.android.package-archive
             application/octet-stream
+          updateOnlyUnreleased: true
