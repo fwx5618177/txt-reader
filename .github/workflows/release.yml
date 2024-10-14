@@ -68,28 +68,6 @@ jobs:
         run: |
           ls -R ./artifacts
 
-      # 解压 Windows 构建产物
-      - name: Unzip Windows Build
-        run: unzip -o ./artifacts/windows/windows-build.zip -d ./artifacts/windows/
-  
-      # 解压 macOS 构建产物
-      - name: Unzip macOS Build
-        run: unzip -o ./artifacts/macos/macos-build.zip -d ./artifacts/macos/
-  
-
-      # 解压 Android 构建产物
-      - name: Unzip Android Build
-        run: unzip -o ./artifacts/android/android-build.zip -d ./artifacts/android/
-
-      # 解压 Linux 构建产物
-      - name: Unzip Linux Build
-        run: unzip -o ./artifacts/linux/linux-build.zip -d ./artifacts/linux/
-
-      # 列出解压后的文件
-      - name: List artifacts
-        run: |
-          ls -R ./artifacts
-
       # 生成 Release Notes
       - name: Generate Release Notes
         run: |
@@ -110,15 +88,6 @@ jobs:
           allowUpdates: true
           replacesArtifacts: false
           token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: |
-            ./artifacts/windows/${{ env.name }}.exe
-            ./artifacts/macos/${{ env.name }}.dmg
-            ./artifacts/android/${{ env.name }}.apk
-            ./artifacts/linux/${{ env.name }}
-          artifactContentType: |
-            application/octet-stream
-            application/x-apple-diskimage
-            application/vnd.android.package-archive
-            application/octet-stream
+          artifacts: "./artifacts/windows/${{ env.name }}.exe,./artifacts/macos/${{ env.name }}.dmg,./artifacts/android/${{ env.name }}.apk,./artifacts/linux/${{ env.name }}"
           skipIfReleaseExists: false
           makeLatest: true
