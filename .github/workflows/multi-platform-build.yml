@@ -28,7 +28,7 @@ jobs:
 
       # 安装 yq
       - name: Install yq
-        run: choco install yq --source="https://github.com/mikefarah/yq/releases/download/v4.40.2/yq_windows_amd64.zip"
+        run: choco install yq --source="https://github.com/mikefarah/yq/releases/download/v4.40.2/yq_windows_amd64.exe"
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
