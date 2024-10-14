@@ -1,0 +1,79 @@
+name: Build IOS
+
+on:
+  push:
+    branches:
+      - main
+      - uat
+      - dev
+      - release
+  pull_request:
+    branches:
+      - main
+      - uat
+      - dev
+      - release
+
+env:
+  name: TXT-Reader
+  raw_name: txt_reader
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest]
+        platform: [ios]
+        include:
+          - os: macos-latest
+            platform: ios
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        if: matrix.platform == 'ios'
+        run: sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build IOS (No Code Signing)
+        if: matrix.platform == 'ios'
+        run: flutter build ios --no-codesign
+
+      - name: Archive and Export IPA
+        if: matrix.platform == 'ios'
+        run: |
+          mkdir -p builds/ipa
+
+          xcodebuild -quiet archive -workspace ios/Runner.xcworkspace -scheme Runner archive \
+          -configuration Release -sdk iphoneos \
+          -archivePath build/ios/archive/Runner.xcarchive \
+          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -jobs 1
+
+      - name: Export IPA
+        run: |
+          xcodebuild -exportArchive -archivePath build/ios/archive/Runner.xcarchive \
+          -exportPath build/ios/ipa \
+          -exportOptionsPlist ExportOptions.plist \
+          -allowProvisioningUpdates \
+          CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO -jobs 1 -verbose
+
+      - name: Rename IPA
+        run: mv build/ios/ipa/Runner.ipa build/ios/ipa/${{ env.name }}.ipa
+
+      - name: Upload iOS Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: build/ios/ipa/${{ env.name }}.ipa
+          retention-days: 3
