@@ -46,11 +46,14 @@ jobs:
       - name: Build Windows
         run: flutter build windows
 
+      - name: List files
+        run: ls -R build\windows\x64\runner\Release
+
       # 重命名生成的 exe 文件
       - name: Rename executable
         run: move build\windows\x64\runner\Release\txt_reader.exe build\windows\x64\runner\Release\${{ env.name }}.exe
 
-
+      # 创建 Inno Setup 脚本文件
       - name: Create Inno Setup Script
         run: |
           Set-Content -Path windows-installer.iss -Value "[Setup]"
@@ -61,6 +64,7 @@ jobs:
           Add-Content -Path windows-installer.iss -Value "OutputDir=build/windows/installer"
           Add-Content -Path windows-installer.iss -Value "OutputBaseFilename=${{ env.name }}_installer"
           Add-Content -Path windows-installer.iss -Value "[Files]"
+          Add-Content -Path windows-installer.iss -Value 'Source: "build\\windows\\x64\\runner\\Release\\${{ env.name }}.exe"; DestDir: "{app}"; Flags: ignoreversion'
           Add-Content -Path windows-installer.iss -Value 'Source: "build\\windows\\x64\\runner\\Release\\*"; DestDir: "{app}"; Flags: ignoreversion'
           Add-Content -Path windows-installer.iss -Value "[Icons]"
           Add-Content -Path windows-installer.iss -Value 'Name: "{group}\${{ env.name }}"; Filename: "{app}\${{ env.name }}.exe"'
