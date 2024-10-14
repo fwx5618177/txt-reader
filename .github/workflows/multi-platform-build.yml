@@ -52,17 +52,17 @@ jobs:
 
       - name: Generate Inno Setup Script
         run: |
-          echo [Setup] > windows-installer.iss
-          echo AppName=${{ env.name }} >> windows-installer.iss
-          echo AppVersion=1.0 >> windows-installer.iss
-          echo DefaultDirName={pf}\\${{ env.name }} >> windows-installer.iss
-          echo DefaultGroupName=${{ env.name }} >> windows-installer.iss
-          echo OutputDir=build/windows/installer >> windows-installer.iss
-          echo OutputBaseFilename=${{ env.name }}_installer >> windows-installer.iss
-          echo [Files] >> windows-installer.iss
-          echo Source: "build\\windows\\x64\\runner\\Release\\*"; DestDir: "{app}"; Flags: ignoreversion >> windows-installer.iss
-          echo [Icons] >> windows-installer.iss
-          echo Name: "{group}\\${{ env.name }}"; Filename: "{app}\\${{ env.name }}.exe" >> windows-installer.iss
+          Write-Host "[Setup]" > windows-installer.iss
+          Add-Content windows-installer.iss "AppName=${{ env.name }}"
+          Add-Content windows-installer.iss "AppVersion=1.0"
+          Add-Content windows-installer.iss "DefaultDirName={pf}\${{ env.name }}"
+          Add-Content windows-installer.iss "DefaultGroupName=${{ env.name }}"
+          Add-Content windows-installer.iss "OutputDir=build/windows/installer"
+          Add-Content windows-installer.iss "OutputBaseFilename=${{ env.name }}_installer"
+          Add-Content windows-installer.iss "[Files]"
+          Add-Content windows-installer.iss 'Source: "build\\windows\\x64\\runner\\Release\\*"; DestDir: "{app}"; Flags: ignoreversion'
+          Add-Content windows-installer.iss "[Icons]"
+          Add-Content windows-installer.iss 'Name: "{group}\\${{ env.name }}"; Filename: "{app}\\${{ env.name }}.exe"'
 
       - name: Run Inno Setup Compiler
         run: iscc windows-installer.iss
