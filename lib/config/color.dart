@@ -23,4 +23,7 @@ class AppColors {
   static const color1 = Color(0xffcaeda1);
   static const color3 = Color(0xffa4e1ff);
   static const black = Colors.black;
+
+  static const lightblue = Color(0xff84daf3);
+  static const boardPrimaryColor = Color(0xfffbfcff);
 }

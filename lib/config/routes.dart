@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:txt_reader/pages/detail.dart';
 import 'package:txt_reader/pages/home.dart';
 import 'package:txt_reader/pages/onboard.dart';
 
@@ -6,6 +7,7 @@ import 'package:txt_reader/pages/onboard.dart';
 class AppRoutes {
   static const String onBoard = '/onBoard';
   static const String home = '/home';
+  static const String detail = '/detail';
 }
 
 // 路由页面管理
@@ -19,6 +21,12 @@ class AppPages {
     GetPage(
       name: AppRoutes.home,
       page: () => HomePage(),
+      transition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 500),
+    ),
+    GetPage(
+      name: AppRoutes.detail,
+      page: () => ReaderDetailPage(),
       transition: Transition.fadeIn,
       transitionDuration: const Duration(milliseconds: 500),
     ),

@@ -20,7 +20,9 @@ class AppTopBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.menu, color: Colors.white),
-        onPressed: () {},
+        onPressed: () {
+          Get.toNamed(AppRoutes.detail);
+        },
       ),
       actions: [
         IconButton(
