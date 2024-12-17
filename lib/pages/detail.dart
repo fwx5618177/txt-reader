@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:txt_reader/config/color.dart';
+import 'package:readmore/readmore.dart';
 
 class ReaderDetailPage extends StatefulWidget {
+  // final Novel novel;
   const ReaderDetailPage({super.key});
 
   @override
@@ -159,16 +159,63 @@ class _ReaderDetailState extends State<ReaderDetailPage> {
                 ),
                 const SizedBox(height: 10),
                 const Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text(
-                    "Description",
-                    style: TextStyle(
-                      fontSize: 18,
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: ReadMoreText(
+                    'Introduction',
+                    trimCollapsedText: 'Read more',
+                    trimExpandedText: 'Show less',
+                    moreStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                       color: Colors.black,
-                      fontWeight: FontWeight.w600,
+                      height: 1.5,
+                    ),
+                    colorClickableText: Colors.lightBlue,
+                    trimMode: TrimMode.Length,
+                    trimLength: 120,
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      height: 1.5,
                     ),
                   ),
-                )
+                ),
+                const SizedBox(height: 20),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Text(
+                        "Gallery",
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Spacer(),
+                      Row(
+                        children: [
+                          Text(
+                            'All',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Icon(
+                            Icons.arrow_right_rounded,
+                            color: Colors.blue,
+                            size: 25,
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           )
