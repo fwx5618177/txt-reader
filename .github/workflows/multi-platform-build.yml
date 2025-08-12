@@ -24,7 +24,7 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # 安装 yq
       - name: Install yq
@@ -84,7 +84,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -132,7 +132,7 @@ jobs:
 #         run: vm_stat
 
 #       - name: Checkout code
-#         uses: actions/checkout@v4
+#         uses: actions/checkout@v5
 
 #       - name: Set up Flutter
 #         uses: subosito/flutter-action@v2
@@ -188,7 +188,7 @@ jobs:
           java-version: '17'
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -220,7 +220,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install yq using snap
         run: sudo snap install yq
