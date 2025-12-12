@@ -73,7 +73,7 @@ jobs:
         run: iscc windows-installer.iss
 
       - name: Upload Windows Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: windows-build
           path: build/windows/installer/${{ env.name }}_installer.exe
@@ -118,7 +118,7 @@ jobs:
 
       # 上传 macOS 构建产物
       - name: Upload macOS Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: macos-build
           path: build/macos/dmg/${{ env.name }}.dmg
@@ -171,7 +171,7 @@ jobs:
 
 #         # 上传 iOS 构建产物
 #       - name: Upload iOS Build Artifacts
-#         uses: actions/upload-artifact@v4
+#         uses: actions/upload-artifact@v6
 #         with:
 #             name: ios-build
 #             path: build/ios/ipa/${{ env.name }}.ipa
@@ -209,7 +209,7 @@ jobs:
 
       # 上传 Android 构建产物
       - name: Upload Android Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: android-build
           path: build/app/outputs/flutter-apk/${{ env.name }}.apk
@@ -245,7 +245,7 @@ jobs:
           mv build/linux/x64/release/bundle/${{ env.raw_name }} build/linux/x64/release/bundle/${{ env.name }}
 
       - name: Upload Linux Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: linux-build
           path: build/linux/x64/release/bundle/${{ env.name }}
